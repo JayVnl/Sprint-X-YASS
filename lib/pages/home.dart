@@ -72,8 +72,10 @@ class _HomeState extends State<Home> {
   }
 
   onTap(int pageIndex) {
-    pageController.jumpToPage(
+    pageController.animateToPage(
       pageIndex,
+      duration: Duration(milliseconds: 400),
+      curve: Curves.easeInOutCirc,
     );
   }
 
@@ -93,16 +95,27 @@ class _HomeState extends State<Home> {
       ),
       bottomNavigationBar: CupertinoTabBar(
         backgroundColor: Theme.of(context).primaryColor,
-        border: Border(top: BorderSide(width: 3.0, color: Theme.of(context).accentColor)),
+        border: Border(
+            top: BorderSide(width: 3.0, color: Theme.of(context).accentColor)),
         currentIndex: pageIndex,
         onTap: onTap,
         activeColor: Theme.of(context).accentColor,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home),),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_active),),
-          BottomNavigationBarItem(icon: Icon(Icons.photo_camera),),
-          BottomNavigationBarItem(icon: Icon(Icons.search),),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle),),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_active),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_camera),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+          ),
         ],
       ),
     );

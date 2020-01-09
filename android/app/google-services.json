@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "408682010430",
+    "firebase_url": "https://yass-ef19a.firebaseio.com",
+    "project_id": "yass-ef19a",
+    "storage_bucket": "yass-ef19a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408682010430:android:616e1014027c8facecbe6f",
+        "android_client_info": {
+          "package_name": "com.jayvnl.yass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408682010430-dan7qvih8oib7kihglihdc4d2g78rrf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jayvnl.yass",
+            "certificate_hash": "6e78b5f7d5c09c281aad360e979c6306583fc9b5"
+          }
+        },
+        {
+          "client_id": "408682010430-cqh52rjbm9nagavav5km6m6g3insjvui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr5z3mgYiFsIBiyhW7XpTp8jeHUiQ7Mu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408682010430-cqh52rjbm9nagavav5km6m6g3insjvui.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

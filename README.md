@@ -1,1 +1,1 @@
-## YASS app made by Jorrit Verstappen
+## YASS - an app made by Jorrit Verstappen

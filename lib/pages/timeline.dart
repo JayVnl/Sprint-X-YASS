@@ -1,4 +1,5 @@
 import 'package:YASS/widgets/header.dart';
+import 'package:YASS/widgets/progress.dart';
 import 'package:flutter/material.dart';
 
 class Timeline extends StatefulWidget {
@@ -12,7 +13,7 @@ class _TimelineState extends State<Timeline> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: header(context, isAppTitle: true),
-      body: Text('Timeline'),
+      body: circularProgress(),
     );
   }
 }

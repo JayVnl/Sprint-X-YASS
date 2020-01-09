@@ -52,6 +52,9 @@ flutter:
     - family: VenusRising
       fonts: 
         - asset: assets/fonts/VenusRising.ttf
+    - family: Manjari
+      fonts: 
+        - asset: assets/fonts/Manjari.ttf
   assets:
     - assets/images/google_signin_button.png
     - assets/images/upload.svg

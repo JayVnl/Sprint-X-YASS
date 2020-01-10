@@ -100,6 +100,7 @@ class _HomeState extends State<Home> {
         currentIndex: pageIndex,
         onTap: onTap,
         activeColor: Theme.of(context).accentColor,
+        inactiveColor: Colors.white,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

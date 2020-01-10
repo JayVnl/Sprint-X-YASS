@@ -14,15 +14,15 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   @override
   void initState() {
-    getUsers();
+    createUser();
     super.initState();
   }
 
-// Collect the current documents of the collection 'users' and then print out each document with their own fields
-  getUsers() async {
-    final QuerySnapshot snapshot = await usersRef.getDocuments();
-    snapshot.documents.forEach((DocumentSnapshot doc) {
-      print(doc.data);
+  createUser() {
+    usersRef.document("asdfasfd").setData({
+      "username": "Jordy",
+      "postsCount": 1,
+      "isAdmin": false
     });
   }
 
@@ -31,7 +31,20 @@ class _TimelineState extends State<Timeline> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: header(context, isAppTitle: true),
-      body: circularProgress(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: usersRef.snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return circularProgress();
+          }
+          final List<Text> children = snapshot.data.documents.map((doc) => Text(doc['username'])).toList();
+          return Container(
+            child: ListView(
+              children: children,
+            ),
+          );
+        },
+      ),
     );
   }
 }

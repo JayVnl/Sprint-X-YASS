@@ -1,5 +1,5 @@
 ## YASS - an app made by Jorrit Verstappen
-![alt text](https://i.postimg.cc/90ccxLHz/github-header.jpg)
+![alt text](https://i.postimg.cc/QC6kXtmk/github-header.png)
 YASS is an app that let’s you share pictures with other users, these users could be your followers or just users passing by your profile.
 
 Features of YASS:

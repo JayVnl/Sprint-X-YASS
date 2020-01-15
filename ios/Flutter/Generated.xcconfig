@@ -1,9 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\Users\Jorri\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\Jorri\Desktop\fluttershare
-FLUTTER_TARGET=lib\main.dart
+FLUTTER_ROOT=/Users/jayvnl/flutter
+FLUTTER_APPLICATION_PATH=/Users/jayvnl/Documents/Development/Sprint-X-YASS
+FLUTTER_TARGET=/Users/jayvnl/Documents/Development/Sprint-X-YASS/lib/main.dart
 FLUTTER_BUILD_DIR=build
-SYMROOT=${SOURCE_ROOT}/../build\ios
-FLUTTER_FRAMEWORK_DIR=C:\Users\Jorri\flutter\bin\cache\artifacts\engine\ios
+SYMROOT=${SOURCE_ROOT}/../build/ios
+FLUTTER_FRAMEWORK_DIR=/Users/jayvnl/flutter/bin/cache/artifacts/engine/ios
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1
+TRACK_WIDGET_CREATION=true

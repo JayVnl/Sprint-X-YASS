@@ -1,3 +1,7 @@
+import 'package:YASS/models/user.dart';
+import 'package:YASS/pages/home.dart';
+import 'package:YASS/widgets/progress.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -7,14 +11,38 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  TextEditingController searchController = TextEditingController();
+  Future<QuerySnapshot> searchResultsFuture;
+
+  handleSearch(String query) {
+    Future<QuerySnapshot> users = usersRef
+        .where("displayName", isGreaterThanOrEqualTo: query)
+        .getDocuments();
+    setState(() {
+      searchResultsFuture = users;
+    });
+  }
+
+  clearSearch() {
+    searchController.clear();
+  }
+
   AppBar buildSearchField() {
     return AppBar(
       backgroundColor: Theme.of(context).accentColor,
       title: TextFormField(
+        controller: searchController,
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          focusedBorder:
-              UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
           hintText: "Search for a user...",
           hintStyle: TextStyle(color: Colors.white),
           prefixIcon: Icon(
@@ -25,14 +53,16 @@ class _SearchState extends State<Search> {
           suffixIcon: IconButton(
             color: Colors.white,
             icon: Icon(Icons.clear),
-            onPressed: () => print("cleared"),
+            onPressed: clearSearch,
           ),
         ),
+        onFieldSubmitted: handleSearch,
       ),
     );
   }
 
   buildNoContent() {
+    final Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
       child: Center(
         child: ListView(
@@ -40,14 +70,14 @@ class _SearchState extends State<Search> {
           children: <Widget>[
             SvgPicture.asset(
               'assets/images/search.svg',
-              height: 250.0,
+              height: orientation == Orientation.portrait ? 250.0 : 180.0,
             ),
             Text(
               "Find users",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 60.0,
+                fontSize: 50.0,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w600,
               ),
@@ -58,12 +88,32 @@ class _SearchState extends State<Search> {
     );
   }
 
+  buildSearchResults() {
+    return FutureBuilder(
+      future: searchResultsFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return circularProgress();
+        }
+        List<Text> searchResults = [];
+        snapshot.data.documents.forEach((doc) {
+          User user = User.fromDocument(doc);
+          searchResults.add(Text(user.username));
+        });
+        return ListView(
+          children: searchResults,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: buildSearchField(),
-      body: buildNoContent(),
+      body:
+          searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
     );
   }
 }

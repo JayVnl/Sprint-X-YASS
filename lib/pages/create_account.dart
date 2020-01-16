@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:YASS/widgets/header.dart';
 import 'package:flutter/material.dart';
 
@@ -7,18 +9,39 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   String username;
 
   submit() {
-    _formKey.currentState.save();
-    Navigator.pop(context, username);
+    final form = _formKey.currentState;
+
+    if (form.validate()) {
+      form.save();
+      SnackBar snackbar = SnackBar(
+        content: Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.only(left: 100, right: 50, bottom: 5),
+          child: Text(
+            "Welcome $username",
+            style: TextStyle(fontSize: 17.0),
+          ),
+        ),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackbar);
+      Timer(Duration(seconds: 2), () {
+        Navigator.pop(context, username);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      appBar: header(context, titleText: "Set up your profile"),
+      key: _scaffoldKey,
+      backgroundColor: Theme.of(context).primaryColor,
+      appBar: header(context,
+          titleText: "Set up your profile", removeBackButton: true),
       body: ListView(
         children: <Widget>[
           Container(
@@ -29,7 +52,10 @@ class _CreateAccountState extends State<CreateAccount> {
                   child: Center(
                     child: Text(
                       "Create a username",
-                      style: TextStyle(fontSize: 25.0),
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -38,13 +64,37 @@ class _CreateAccountState extends State<CreateAccount> {
                   child: Container(
                     child: Form(
                       key: _formKey,
+                      autovalidate: true,
                       child: TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        validator: (val) {
+                          if (val.trim().length < 3 || val.isEmpty) {
+                            return "Username too short";
+                          } else if (val.trim().length > 12) {
+                            return "Username too long";
+                          } else {
+                            return null;
+                          }
+                        },
                         onSaved: (val) => username = val,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.0),
+                          ),
                           labelText: "Username",
-                          labelStyle: TextStyle(fontSize: 15.0),
+                          labelStyle: TextStyle(
+                            fontSize: 15.0,
+                            color: Colors.white,
+                          ),
                           hintText: "Must be at least 3 characters",
+                          hintStyle: TextStyle(
+                            color: Colors.white60,
+                          ),
                         ),
                       ),
                     ),

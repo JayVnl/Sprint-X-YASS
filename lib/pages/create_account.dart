@@ -20,10 +20,9 @@ class _CreateAccountState extends State<CreateAccount> {
       form.save();
       SnackBar snackbar = SnackBar(
         content: Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.only(left: 100, right: 50, bottom: 5),
           child: Text(
             "Welcome $username",
+            textAlign: TextAlign.center,
             style: TextStyle(fontSize: 17.0),
           ),
         ),

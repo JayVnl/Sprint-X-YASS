@@ -139,19 +139,19 @@ class _HomeState extends State<Home> {
         inactiveColor: Colors.white,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_active),
+            icon: Icon(Icons.notifications_active, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.photo_camera),
+            icon: Icon(Icons.photo_camera, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle, size: 25.0),
           ),
         ],
       ),

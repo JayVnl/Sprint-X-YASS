@@ -17,7 +17,8 @@ class _SearchState extends State<Search> {
 
   handleSearch(String query) {
     Future<QuerySnapshot> users = usersRef
-        .where("displayName", isGreaterThanOrEqualTo: query)
+    // Change "username" value depending on what you wanna sort by
+        .where("username", isGreaterThanOrEqualTo: query)
         .getDocuments();
     setState(() {
       searchResultsFuture = users;

@@ -37,13 +37,13 @@ class _SearchState extends State<Search> {
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.white30),
           ),
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.white30),
           ),
           hintText: "Search for a user...",
           hintStyle: TextStyle(color: Colors.white),

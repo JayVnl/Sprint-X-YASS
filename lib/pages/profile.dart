@@ -2,8 +2,10 @@ import 'package:YASS/models/user.dart';
 import 'package:YASS/pages/edit_profile.dart';
 import 'package:YASS/pages/home.dart';
 import 'package:YASS/widgets/header.dart';
+import 'package:YASS/widgets/post.dart';
 import 'package:YASS/widgets/progress.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -16,7 +18,32 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-final String currentUserId = currentUser?.id;
+  final String currentUserId = currentUser?.id;
+  bool isLoading = false;
+  int postsCount = 0;
+  List<Post> posts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getProfilePosts();
+  }
+
+  getProfilePosts() async {
+    setState(() {
+      isLoading = true;
+    });
+    QuerySnapshot snapshot = await postsRef
+        .document(widget.profileId)
+        .collection("userPosts")
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+        setState(() {
+          isLoading = false;
+          postsCount = snapshot.documents.length;
+          posts = snapshot.documents.map((doc) => Post.fromDocument(doc)).toList();
+        });
+  }
 
   Column buildCountColumn(String label, int count) {
     return Column(
@@ -47,10 +74,13 @@ final String currentUserId = currentUser?.id;
   }
 
   editProfile() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile(currentUserId: currentUserId)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditProfile(currentUserId: currentUserId)));
   }
 
-  buildButton({ String text, Function function }) {
+  buildButton({String text, Function function}) {
     return Container(
       padding: EdgeInsets.only(top: 2.0),
       child: FlatButton(
@@ -59,7 +89,7 @@ final String currentUserId = currentUser?.id;
           width: 211.0,
           height: 27.0,
           child: Text(
-            text, 
+            text,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -81,10 +111,7 @@ final String currentUserId = currentUser?.id;
   buildProfileButton() {
     bool isProfileOwner = currentUserId == widget.profileId;
     if (isProfileOwner) {
-      return buildButton(
-        text: "Edit Profile",
-        function: editProfile
-      ); 
+      return buildButton(text: "Edit Profile", function: editProfile);
     }
   }
 
@@ -115,7 +142,7 @@ final String currentUserId = currentUser?.id;
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            buildCountColumn("posts", 0),
+                            buildCountColumn("posts", postsCount),
                             buildCountColumn("followers", 0),
                             buildCountColumn("following", 0),
                           ],
@@ -154,6 +181,10 @@ final String currentUserId = currentUser?.id;
                   ),
                 ),
               ),
+              Divider(
+                color: Colors.white54,
+                height: 7.0,
+              ),
               Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(top: 2.0),
@@ -171,13 +202,30 @@ final String currentUserId = currentUser?.id;
     );
   }
 
+  buildProfilePosts() {
+    if (isLoading) {
+      return circularProgress();
+    }
+    return Column(
+      children: posts,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: header(context, titleText: "Profile"),
       body: ListView(
-        children: <Widget>[buildProfileHeader()],
+        children: <Widget>[
+          buildProfileHeader(),
+          Divider(
+            color: Theme.of(context).accentColor,
+            height: 0.0,
+            thickness: 2.0,
+          ),
+          buildProfilePosts(),
+        ],
       ),
     );
   }

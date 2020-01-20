@@ -153,6 +153,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
         actions: <Widget>[
           IconButton(
+            padding: EdgeInsets.only(right: 20.0),
             onPressed: () => Navigator.pop(context),
             icon: Icon(
               Icons.done,

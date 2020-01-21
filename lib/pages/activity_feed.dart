@@ -1,4 +1,6 @@
 import 'package:YASS/pages/home.dart';
+import 'package:YASS/pages/post_screen.dart';
+import 'package:YASS/pages/profile.dart';
 import 'package:YASS/widgets/header.dart';
 import 'package:YASS/widgets/progress.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,10 +21,10 @@ class _ActivityFeedState extends State<ActivityFeed> {
         .orderBy('timestamp', descending: true)
         .limit(50)
         .getDocuments();
-      List<ActivityFeedItem> feedItems = [];
-      snapshot.documents.forEach((doc) {
-        feedItems.add(ActivityFeedItem.fromDocument(doc));
-      });
+    List<ActivityFeedItem> feedItems = [];
+    snapshot.documents.forEach((doc) {
+      feedItems.add(ActivityFeedItem.fromDocument(doc));
+    });
     // snapshot.documents.forEach((doc) {
     //   print('Activity Feed Item: ${doc.data}');
     // });
@@ -87,10 +89,22 @@ class ActivityFeedItem extends StatelessWidget {
     );
   }
 
-  configureMediaPreview() {
+  showPost(context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PostScreen(
+          postId: postId,
+          userId: userId,
+        ),
+      ),
+    );
+  }
+
+  configureMediaPreview(context) {
     if (type == "like" || type == "comment") {
       mediaPreview = GestureDetector(
-        onTap: () => print("showing post"),
+        onTap: () => showPost(context),
         child: Container(
           height: 50.0,
           width: 50.0,
@@ -115,7 +129,7 @@ class ActivityFeedItem extends StatelessWidget {
       activityItemText = "liked your post";
     } else if (type == 'follow') {
       activityItemText = "is following you";
-    } else if ( type == 'comment') {
+    } else if (type == 'comment') {
       activityItemText = 'replied: $commentData';
     } else {
       activityItemText = "Error: Unknown type '$type'";
@@ -124,7 +138,7 @@ class ActivityFeedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    configureMediaPreview();
+    configureMediaPreview(context);
 
     return Padding(
       padding: EdgeInsets.only(bottom: 2.0),
@@ -132,26 +146,25 @@ class ActivityFeedItem extends StatelessWidget {
         color: Colors.black26,
         child: ListTile(
           title: GestureDetector(
-            onTap: () => print("show profile"),
+            onTap: () => showProfile(context, profileId: userId),
             child: RichText(
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.white,
-                ),
-                children: [
-                  TextSpan(
-                    text: username,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.white,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: username,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: ' $activityItemText',
-                  ),
-                ]
-              ),
+                    TextSpan(
+                      text: ' $activityItemText',
+                    ),
+                  ]),
             ),
           ),
           leading: CircleAvatar(
@@ -167,4 +180,15 @@ class ActivityFeedItem extends StatelessWidget {
       ),
     );
   }
+}
+
+showProfile(BuildContext context, {String profileId}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Profile(
+        profileId: profileId,
+      ),
+    ),
+  );
 }

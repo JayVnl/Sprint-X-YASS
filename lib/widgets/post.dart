@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:YASS/models/user.dart';
+import 'package:YASS/pages/activity_feed.dart';
 import 'package:YASS/pages/comments.dart';
 import 'package:YASS/pages/home.dart';
 import 'package:YASS/widgets/custom_image.dart';
@@ -105,7 +106,7 @@ class _PostState extends State<Post> {
             backgroundColor: Colors.grey,
           ),
           title: GestureDetector(
-            onTap: () => print("profile shown"),
+            onTap: () => showProfile(context, profileId: user.id),
             child: Text(
               user.username,
               style: TextStyle(

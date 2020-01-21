@@ -35,10 +35,16 @@ dependencies:
   cached_network_image: ^2.0.0-rc
   flutter_svg:
   flutter_image_compress: ^0.6.5+1
+  flutter_launcher_icons: "^0.7.3"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/images/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -51,10 +57,10 @@ flutter:
       fonts:
         - asset: assets/fonts/Signatra.ttf
     - family: VenusRising
-      fonts: 
+      fonts:
         - asset: assets/fonts/VenusRising.ttf
     - family: Manjari
-      fonts: 
+      fonts:
         - asset: assets/fonts/Manjari.ttf
   assets:
     - assets/images/google_signin_button.png
@@ -63,3 +69,4 @@ flutter:
     - assets/images/activity_feed.svg
     - assets/images/no_content.svg
     - assets/images/background.png
+    - assets/images/icon.png

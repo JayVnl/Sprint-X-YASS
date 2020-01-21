@@ -150,7 +150,7 @@ class _UploadState extends State<Upload> {
   }
 
   handleSubmit() async {
-    setState(() {
+     setState(() {
       isUploading = true;
     });
     await compressImage();

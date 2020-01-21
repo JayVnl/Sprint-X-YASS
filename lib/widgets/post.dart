@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:YASS/models/user.dart';
+import 'package:YASS/pages/comments.dart';
 import 'package:YASS/pages/home.dart';
 import 'package:YASS/widgets/custom_image.dart';
 import 'package:YASS/widgets/progress.dart';
+import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +75,7 @@ class _PostState extends State<Post> {
   final String location;
   final String description;
   final String mediaUrl;
+  bool showHeart = false;
   int likeCount;
   Map likes;
   bool isLiked;
@@ -130,10 +135,10 @@ class _PostState extends State<Post> {
 
     if (_isLiked) {
       postsRef
-        .document(ownerId)
-        .collection('userPosts')
-        .document(postId)
-        .updateData({ 'likes.$currentUserId': false });
+          .document(ownerId)
+          .collection('userPosts')
+          .document(postId)
+          .updateData({'likes.$currentUserId': false});
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -141,17 +146,23 @@ class _PostState extends State<Post> {
       });
     } else if (!_isLiked) {
       postsRef
-        .document(ownerId)
-        .collection('userPosts')
-        .document(postId)
-        .updateData({ 'likes.$currentUserId': true });
+          .document(ownerId)
+          .collection('userPosts')
+          .document(postId)
+          .updateData({'likes.$currentUserId': true});
       setState(() {
         likeCount += 1;
         isLiked = true;
         likes[currentUserId] = true;
+        showHeart = true;
+      });
+      Timer(Duration(milliseconds: 1000), () {
+        setState(() {
+          showHeart = false;
+        });
       });
     }
-   }
+  }
 
   buildPostImage() {
     return GestureDetector(
@@ -160,6 +171,22 @@ class _PostState extends State<Post> {
         alignment: Alignment.center,
         children: <Widget>[
           cachedNetworkImage(mediaUrl),
+          showHeart
+              ? Animator(
+                  duration: Duration(milliseconds: 600),
+                  tween: Tween(begin: 0.8, end: 1.4),
+                  curve: Curves.easeInExpo,
+                  cycles: 0,
+                  builder: (anim) => Transform.scale(
+                    scale: anim.value,
+                    child: Icon(
+                      Icons.favorite,
+                      size: 100.0,
+                      color: Theme.of(context).accentColor,
+                    ),
+                  ),
+                )
+              : Text(""),
         ],
       ),
     );
@@ -186,7 +213,12 @@ class _PostState extends State<Post> {
               padding: EdgeInsets.only(right: 15.0),
             ),
             GestureDetector(
-              onTap: () => print("comments shown"),
+              onTap: () => showComments(
+                context,
+                postId: postId,
+                ownerId: ownerId,
+                mediaUrl: mediaUrl,
+              ),
               child: Icon(
                 Icons.chat,
                 size: 28.0,
@@ -249,4 +281,14 @@ class _PostState extends State<Post> {
       ],
     );
   }
+}
+
+showComments(BuildContext context, { String postId, String ownerId, String mediaUrl }) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+    return Comments(
+      postId: postId,
+      postOwnerId: ownerId,
+      postMediaUrl: mediaUrl,
+    );
+  }));
 }

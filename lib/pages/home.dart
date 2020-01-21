@@ -16,6 +16,7 @@ final StorageReference storageRef = FirebaseStorage.instance.ref();
 final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
+final activityFeedRef = Firestore.instance.collection('feed');
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
@@ -146,16 +147,16 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.home, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_active, size: 25.0),
+            icon: Icon(Icons.notifications, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.photo_camera, size: 25.0),
+            icon: Icon(Icons.camera, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, size: 25.0),
+            icon: Icon(Icons.people, size: 25.0),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle, size: 25.0),
+            icon: Icon(Icons.person, size: 25.0),
           ),
         ],
       ),

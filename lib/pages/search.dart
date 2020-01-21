@@ -71,7 +71,7 @@ class _SearchState extends State<Search> {
           shrinkWrap: true,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/images/search.svg',
+              'assets/images/search2.svg',
               height: orientation == Orientation.portrait ? 250.0 : 180.0,
             ),
             Text(

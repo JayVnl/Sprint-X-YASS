@@ -170,7 +170,7 @@ class _PostState extends State<Post> {
   addLikeToNotifications() {
     bool isNotPostOwner = currentUserId != ownerId;
     if (isNotPostOwner) {
-      NotificationsRef
+      notificationsRef
           .document(ownerId)
           .collection('feedItems')
           .document(postId)
@@ -189,7 +189,7 @@ class _PostState extends State<Post> {
   removeLikeFromNotifications() {
     bool isNotPostOwner = currentUserId != ownerId;
     if (isNotPostOwner) {
-      NotificationsRef
+      notificationsRef
           .document(ownerId)
           .collection('feedItems')
           .document(postId)

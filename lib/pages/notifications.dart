@@ -15,7 +15,7 @@ class Notifications extends StatefulWidget {
 
 class _NotificationsState extends State<Notifications> {
   getNotifications() async {
-    QuerySnapshot snapshot = await NotificationsRef
+    QuerySnapshot snapshot = await notificationsRef
         .document(currentUser.id)
         .collection('feedItems')
         .orderBy('timestamp', descending: true)

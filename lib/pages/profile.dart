@@ -20,18 +20,56 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  
   final String currentUserId = currentUser?.id;
   String postOrientation = "grid";
   bool isLoading = false;
   bool isFollowing = false;
   int postsCount = 0;
+  int followerCount = 0;
+  int followingCount = 0;
   List<Post> posts = [];
 
   @override
   void initState() {
     super.initState();
     getProfilePosts();
+    getFollowers();
+    getFollowing();
+    checkIfFollowing();
+  }
+
+  getFollowers() async {
+    QuerySnapshot snapshot = await followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .getDocuments();
+
+    setState(() {
+      followerCount = snapshot.documents.length;
+    });
+  }
+
+  getFollowing() async {
+    QuerySnapshot snapshot = await followingRef
+        .document(widget.profileId)
+        .collection('userFollowing')
+        .getDocuments();
+
+    setState(() {
+      followingCount = snapshot.documents.length;
+    });
+  }
+
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUserId)
+        .get();
+
+    setState(() {
+      isFollowing = doc.exists;
+    });
   }
 
   getProfilePosts() async {
@@ -102,9 +140,12 @@ class _ProfileState extends State<Profile> {
           ),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Theme.of(context).accentColor,
+            color: isFollowing
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).accentColor,
             border: Border.all(
-              color: Theme.of(context).accentColor,
+              color: Colors.white,
+              width: 0.7,
             ),
             borderRadius: BorderRadius.circular(5.0),
           ),
@@ -117,28 +158,85 @@ class _ProfileState extends State<Profile> {
     bool isProfileOwner = currentUserId == widget.profileId;
     if (isProfileOwner) {
       return buildButton(
-        text: "Edit Profile", 
+        text: "Edit Profile",
         function: editProfile,
-        );
+      );
     } else if (isFollowing) {
       return buildButton(
-        text: "Unfollow", 
+        text: "Unfollow",
         function: handleUnfollowUser,
-        );
-    } else if (!isFollowing) {
-      return buildButton(
-        text: "Follow",
-        function: handleFollowUser
       );
+    } else if (!isFollowing) {
+      return buildButton(text: "Follow", function: handleFollowUser);
     }
   }
 
   handleFollowUser() {
-    
+    setState(() {
+      isFollowing = true;
+    });
+    followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUserId)
+        .setData({});
+
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(widget.profileId)
+        .setData({});
+
+    notificationsRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .setData({
+      "type": "follow",
+      "ownerId": widget.profileId,
+      "username": currentUser.username,
+      "userId": currentUserId,
+      "userProfileImage": currentUser.photoUrl,
+      "timestamp": timestamp,
+    });
   }
 
   handleUnfollowUser() {
+    setState(() {
+      isFollowing = false;
+    });
+    followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
 
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(widget.profileId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+
+    notificationsRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 
   buildProfileHeader() {
@@ -169,8 +267,8 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             buildCountColumn("posts", postsCount),
-                            buildCountColumn("followers", 0),
-                            buildCountColumn("following", 0),
+                            buildCountColumn("followers", followerCount),
+                            buildCountColumn("following", followingCount),
                           ],
                         ),
                         Row(
@@ -230,26 +328,27 @@ class _ProfileState extends State<Profile> {
       return circularProgress();
     } else if (posts.isEmpty) {
       return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(padding: EdgeInsets.only(top: 70.0),),
-              SvgPicture.asset('assets/images/no_content.svg', height: 180.0),
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Text(
-                    "No Posts",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 70.0),
+            ),
+            SvgPicture.asset('assets/images/no_content.svg', height: 180.0),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: Text(
+                "No Posts",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ],
-          ),
-        );
-      
+            ),
+          ],
+        ),
+      );
     } else if (postOrientation == "grid") {
       List<GridTile> gridTiles = [];
       posts.forEach((post) {

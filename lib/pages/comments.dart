@@ -67,7 +67,7 @@ class CommentsState extends State<Comments> {
     });
     bool isNotPostOwner = postOwnerId != currentUser.id;
     if (isNotPostOwner) {
-      activityFeedRef.document(postOwnerId).collection('feedItems').add({
+      NotificationsRef.document(postOwnerId).collection('feedItems').add({
         "type": "comment",
         "commentData": commentController.text,
         "timestamp": timestamp,

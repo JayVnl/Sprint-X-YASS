@@ -20,9 +20,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  
   final String currentUserId = currentUser?.id;
   String postOrientation = "grid";
   bool isLoading = false;
+  bool isFollowing = false;
   int postsCount = 0;
   List<Post> posts = [];
 
@@ -114,10 +116,29 @@ class _ProfileState extends State<Profile> {
   buildProfileButton() {
     bool isProfileOwner = currentUserId == widget.profileId;
     if (isProfileOwner) {
-      return buildButton(text: "Edit Profile", function: editProfile);
-    } else {
-      return Text('button');
+      return buildButton(
+        text: "Edit Profile", 
+        function: editProfile,
+        );
+    } else if (isFollowing) {
+      return buildButton(
+        text: "Unfollow", 
+        function: handleUnfollowUser,
+        );
+    } else if (!isFollowing) {
+      return buildButton(
+        text: "Follow",
+        function: handleFollowUser
+      );
     }
+  }
+
+  handleFollowUser() {
+    
+  }
+
+  handleUnfollowUser() {
+
   }
 
   buildProfileHeader() {

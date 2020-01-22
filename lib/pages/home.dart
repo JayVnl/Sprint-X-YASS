@@ -1,5 +1,5 @@
 import 'package:YASS/models/user.dart';
-import 'package:YASS/pages/activity_feed.dart';
+import 'package:YASS/pages/notifications.dart';
 import 'package:YASS/pages/create_account.dart';
 import 'package:YASS/pages/profile.dart';
 import 'package:YASS/pages/search.dart';
@@ -16,7 +16,7 @@ final StorageReference storageRef = FirebaseStorage.instance.ref();
 final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
-final activityFeedRef = Firestore.instance.collection('feed');
+final NotificationsRef = Firestore.instance.collection('feed');
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
             child: Text('Logout'),
             onPressed: logout,
           ),
-          ActivityFeed(),
+          Notifications(),
           Upload(currentUser: currentUser),
           Search(),
           Profile(profileId: currentUser?.id),

@@ -8,22 +8,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class ActivityFeed extends StatefulWidget {
+class Notifications extends StatefulWidget {
   @override
-  _ActivityFeedState createState() => _ActivityFeedState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _ActivityFeedState extends State<ActivityFeed> {
-  getActivityFeed() async {
-    QuerySnapshot snapshot = await activityFeedRef
+class _NotificationsState extends State<Notifications> {
+  getNotifications() async {
+    QuerySnapshot snapshot = await NotificationsRef
         .document(currentUser.id)
         .collection('feedItems')
         .orderBy('timestamp', descending: true)
         .limit(50)
         .getDocuments();
-    List<ActivityFeedItem> feedItems = [];
+    List<NotificationsItem> feedItems = [];
     snapshot.documents.forEach((doc) {
-      feedItems.add(ActivityFeedItem.fromDocument(doc));
+      feedItems.add(NotificationsItem.fromDocument(doc));
     });
     // snapshot.documents.forEach((doc) {
     //   print('Activity Feed Item: ${doc.data}');
@@ -35,10 +35,10 @@ class _ActivityFeedState extends State<ActivityFeed> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: header(context, titleText: "Activity Feed"),
+      appBar: header(context, titleText: "Notifications"),
       body: Container(
         child: FutureBuilder(
-            future: getActivityFeed(),
+            future: getNotifications(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return circularProgress();
@@ -55,9 +55,10 @@ class _ActivityFeedState extends State<ActivityFeed> {
 Widget mediaPreview;
 String activityItemText;
 
-class ActivityFeedItem extends StatelessWidget {
+class NotificationsItem extends StatelessWidget {
   final String username;
   final String userId;
+  final String postUserId;
   final String type;
   final String mediaUrl;
   final String postId;
@@ -65,9 +66,10 @@ class ActivityFeedItem extends StatelessWidget {
   final String commentData;
   final Timestamp timestamp;
 
-  const ActivityFeedItem({
+  const NotificationsItem({
     this.username,
     this.userId,
+    this.postUserId,
     this.type,
     this.mediaUrl,
     this.postId,
@@ -76,10 +78,11 @@ class ActivityFeedItem extends StatelessWidget {
     this.timestamp,
   });
 
-  factory ActivityFeedItem.fromDocument(DocumentSnapshot doc) {
-    return ActivityFeedItem(
+  factory NotificationsItem.fromDocument(DocumentSnapshot doc) {
+    return NotificationsItem(
       username: doc['username'],
       userId: doc['userId'],
+      postUserId: currentUser.id,
       type: doc['type'],
       postId: doc['postId'],
       userProfileImage: doc['userProfileImage'],
@@ -94,8 +97,8 @@ class ActivityFeedItem extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => PostScreen(
+          userId: postUserId,
           postId: postId,
-          userId: userId,
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:YASS/models/user.dart';
-import 'package:YASS/pages/activity_feed.dart';
+import 'package:YASS/pages/notifications.dart';
 import 'package:YASS/pages/comments.dart';
 import 'package:YASS/pages/home.dart';
 import 'package:YASS/widgets/custom_image.dart';
@@ -140,7 +140,7 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .document(postId)
           .updateData({'likes.$currentUserId': false});
-      removeLikeFromActivityFeed();
+      removeLikeFromNotifications();
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -152,7 +152,7 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .document(postId)
           .updateData({'likes.$currentUserId': true});
-      addLikeToActivityFeed();
+      addLikeToNotifications();
       setState(() {
         likeCount += 1;
         isLiked = true;
@@ -167,10 +167,10 @@ class _PostState extends State<Post> {
     }
   }
 
-  addLikeToActivityFeed() {
+  addLikeToNotifications() {
     bool isNotPostOwner = currentUserId != ownerId;
     if (isNotPostOwner) {
-      activityFeedRef
+      NotificationsRef
           .document(ownerId)
           .collection('feedItems')
           .document(postId)
@@ -186,10 +186,10 @@ class _PostState extends State<Post> {
     }
   }
 
-  removeLikeFromActivityFeed() {
+  removeLikeFromNotifications() {
     bool isNotPostOwner = currentUserId != ownerId;
     if (isNotPostOwner) {
-      activityFeedRef
+      NotificationsRef
           .document(ownerId)
           .collection('feedItems')
           .document(postId)

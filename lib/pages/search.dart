@@ -1,5 +1,5 @@
 import 'package:YASS/models/user.dart';
-import 'package:YASS/pages/activity_feed.dart';
+import 'package:YASS/pages/notifications.dart';
 import 'package:YASS/pages/home.dart';
 import 'package:YASS/widgets/progress.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -72,7 +72,7 @@ class _SearchState extends State<Search> {
           shrinkWrap: true,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/images/search2.svg',
+              'assets/images/search.svg',
               height: orientation == Orientation.portrait ? 250.0 : 180.0,
             ),
             Text(
